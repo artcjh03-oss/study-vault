@@ -90,6 +90,7 @@ git push origin main
 ### ⚠️ 常見錯誤排查：出現 `warning: adding embedded git repository` 怎麼辦？
 
 當你在終端機輸入 `git add .` 時，如果出現以下這串警告：
+
 ```text
 warning: adding embedded git repository: study-vault
 hint: You've added another git repository inside your current repository.
@@ -99,6 +100,7 @@ hint: the embedded repository and will not know how to obtain it.
 ```
 
 #### 🔍 這是什麼意思？
+
 這代表**「你在一個 Git 儲存庫（外層）中，又放入了另一個 Git 儲存庫（內層）」**。
 在你的狀況中，是因為你在外層資料夾（`d:\MyData\study`）執行了 `git init`，然後又在裡面執行了 `git clone` 下載了 `study-vault`（它本身也是一個獨立的 Git 儲存庫，內含 `.git` 資料夾）。
 
@@ -111,18 +113,22 @@ hint: the embedded repository and will not know how to obtain it.
 如果你**只想管理 `study-vault` 這個筆記資料夾的內容**，外層的 `study` 資料夾不需要獨立的 Git 紀錄，請按照以下步驟修復：
 
 1. **清除外層 Git 對該資料夾的快取紀錄**（在 `d:\MyData\study` 目錄下執行）：
+
    ```bash
    git rm --cached study-vault
    ```
+
    *(這會告訴外層 Git 不要把內層當作子模組追蹤)*
 
 2. **切換終端機目錄進入 `study-vault`**：
    *未來的 Git 新增、提交、推送指令，都必須先切換進入這個資料夾操作！*
+
    ```bash
    cd study-vault
    ```
 
 3. **在正確的目錄重新上傳：**
+
    ```bash
    git add .
    git commit -m "feat: 新增筆記與目錄"
@@ -181,23 +187,28 @@ graph LR
 ### 💾 本地操作指令
 
 #### `git init`
+
 * **功能**：在目前的資料夾下初始化一個全新的 Git 儲存庫。
 * **背後原理**：會建立一個隱藏的 `.git` 資料夾，用來存放該專案的所有歷史版本紀錄。
 * **注意**：通常一個專案只需要在最外層目錄執行一次即可。
 
 #### `git status`
+
 * **功能**：檢查目前工作區與暫存區中檔案的狀態。
 * **背後原理**：Git 會比對你目前的檔案與上一次提交的檔案。如果檔案是紅色的，代表是「未追蹤」或「已修改」；如果是綠色的，代表是「已暫存」，準備好可以 commit 了。
 
 #### `git add <檔案路徑>` 或 `git add .`
+
 * **功能**：將檔案從「工作區」加到「暫存區」。
 * **背後原理**：將這些檔案的目前狀態記錄到 Git 的暫存清單中。使用 `git add .`（點號）代表將目前目錄（包含子目錄）下所有新增與修改的檔案一次全部加進去。
 
 #### `git commit -m "提交訊息"`
+
 * **功能**：將暫存區的變更正式記錄到「本地儲存庫」。
 * **背後原理**：把暫存區的所有檔案打包，產生一個獨一無二的 Commit ID（雜湊值），並附加你的說明訊息。這是版本控制中最關鍵的「存檔點」，日後你可以隨時回到這個狀態。
 
 #### `git log`
+
 * **功能**：查看本地儲存庫的提交歷史紀錄。
 * **背後原理**：依時間順序由新到舊列出所有的 Commit，顯示 Commit ID、作者、時間與提交訊息。
 
@@ -206,22 +217,27 @@ graph LR
 ### 🌐 遠端與 GitHub 操作指令
 
 #### `git clone <儲存庫網址>`
+
 * **功能**：將 GitHub 上的遠端儲存庫完整複製一份到你的本地電腦。
 * **背後原理**：不僅下載所有的檔案，還會把整個 Git 歷史紀錄（`.git`）與遠端連接關係一併下載下來。
 
 #### `git remote add origin <儲存庫網址>`
+
 * **功能**：將本地儲存庫與 GitHub 上的遠端儲存庫進行綁定。
 * **背後原理**：在 Git 設定中新增一個名為 `origin` 的遠端簡稱，指向你的 GitHub 網址，這樣未來就不需要每次都輸入冗長的網址了。
 
 #### `git branch -M main`
+
 * **功能**：將目前本地預設的主分支名稱強制修改為 `main`。
 * **背後原理**：舊版的 Git 預設主分支叫 `master`，而 GitHub 目前預設改用 `main`。此指令可避免推送到雲端時產生分支名稱不一致的問題。
 
 #### `git push -u origin main` / `git push`
+
 * **功能**：將本地儲存庫的提交紀錄上傳（推）到 GitHub。
 * **背後原理**：將本地的變更同步到雲端儲存庫的 `main` 分支。加上 `-u` 參數是為了建立本地 `main` 分支與遠端 `origin/main` 的預設追蹤關係，之後更新只需要直接輸入簡短的 `git push` 即可。
 
 #### `git pull`
+
 * **功能**：拉取（下載）遠端儲存庫的最新變更，並與本地電腦的檔案進行合併。
 * **背後原理**：相當於執行 `git fetch`（下載變更）加上 `git merge`（合併檔案）。當你在多台電腦寫筆記時，開始寫之前務必先執行此指令以同步進度。
 
@@ -230,5 +246,6 @@ graph LR
 ### ⚠️ 特殊與排錯指令
 
 #### `git rm --cached <檔案或資料夾>`
+
 * **功能**：從 Git 的暫存區（索引）中移除檔案，但**保留**電腦硬碟上的實體檔案。
 * **背後原理**：告訴 Git 不要再追蹤這個檔案（讓它變回 Untracked 狀態），但不會刪除你的檔案。最常用於「不小心把不需要的資料夾（例如 nested repository）加進 Git 追蹤」時的排錯。
