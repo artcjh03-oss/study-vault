@@ -1,32 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>我的學習筆記</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
+  <meta name="description" content="個人學習筆記與知識庫">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
+  <!-- 引入 Google Fonts -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+
+  <!-- Docsify Themeable 主題樣式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+
+  <!-- 側邊欄摺疊樣式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
+
+  <!-- 自訂 CSS 變數以調整主題顏色與字型 -->
+  <style>
+    :root {
+      /* 調整主題色彩 - 現代靛藍色 */
+      --theme-color: #4f46e5;
+
+      /* 設定美觀的字型家族 */
+      --base-font-family: 'Outfit', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --heading-font-family: 'Outfit', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+      /* 微調版面與邊距 */
+      --content-max-width: 55em;
+      --sidebar-width: 18rem;
+    }
+
+    /* 自訂平滑滾動效果 */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">載入中...</div>
   <script>
     window.$docsify = {
-      name: '我的學習筆記',
+      name: '📚 我的學習筆記',
       repo: 'https://github.com/artcjh03-oss/study-vault',
-      loadSidebar: true, // 啟用側邊欄
+      loadSidebar: true,    // 啟用側邊欄
+      autoHeader: true,
       maxLevel: 4,
-      subMaxLevel: 2
+      subMaxLevel: 2,
+
+      // 全文字搜尋設定
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: '搜尋筆記...',
+        noData: '找不到結果',
+        depth: 4
+      },
+
+      // 分頁導覽設定
+      pagination: {
+        previousText: '上一篇',
+        nextText: '下一篇',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+
+      // 進度條設定
+      progress: {
+        position: "top",
+        color: "var(--theme-color)",
+        height: "3px",
+      }
     }
   </script>
-  <!-- Docsify v4 -->
+
+  <!-- Docsify v4 主程式 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <!-- 全文字搜尋插件 -->
+
+  <!-- 外掛插件清單 -->
+  <!-- 全文字搜尋 -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <!-- 代碼一鍵複製插件 -->
+  <!-- 代碼一鍵複製 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <!-- 側邊欄摺疊 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.js"></script>
+  <!-- 頁面底部下一頁導覽 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <!-- 閱讀進度條 -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-progress@latest/dist/progress.min.js"></script>
+  <!-- 美化提示氣泡框 (Alerts) -->
+  <script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
 </body>
 
 </html>
