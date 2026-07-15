@@ -7,24 +7,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="個人學習筆記與知識庫">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-
+  
   <!-- 引入 Google Fonts -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
-
-  <!-- Docsify Themeable 主題樣式 -->
-  <link id="theme-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+  
+  <!-- Docsify Themeable 主題樣式動態載入 -->
   <script>
-    // 預先檢查 localStorage，避免載入時閃爍白光
     (function() {
       var currentTheme = localStorage.getItem('theme') || 'light';
-      if (currentTheme === 'dark') {
-        document.getElementById('theme-stylesheet').setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      var themeUrl = currentTheme === 'dark' 
+        ? 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css'
+        : 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css';
+      
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.id = 'theme-stylesheet';
+      link.href = themeUrl;
+      document.head.appendChild(link);
+      document.documentElement.setAttribute('data-theme', currentTheme);
     })();
   </script>
-
+  
   <!-- 側邊欄摺疊樣式 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
@@ -33,16 +36,16 @@
     :root {
       /* 調整主題色彩 - 現代靛藍色 */
       --theme-color: #4f46e5;
-
+      
       /* 設定美觀的字型家族 */
       --base-font-family: 'Outfit', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       --heading-font-family: 'Outfit', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-
+      
       /* 微調版面與邊距 */
       --content-max-width: 55em;
       --sidebar-width: 18rem;
     }
-
+    
     /* 自訂平滑滾動效果 */
     html {
       scroll-behavior: smooth;
@@ -130,7 +133,7 @@
       autoHeader: true,
       maxLevel: 4,
       subMaxLevel: 2,
-
+      
       // 全文字搜尋設定
       search: {
         maxAge: 86400000,
@@ -156,43 +159,51 @@
       }
     }
   </script>
-
+  
   <!-- Docsify v4 主程式 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-
+  
   <!-- 外掛插件清單 -->
   <!-- 全文字搜尋 -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <!-- 代碼一鍵複製 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <!-- 側邊欄摺疊 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
   <!-- 頁面底部下一頁導覽 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
   <!-- 閱讀進度條 -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-progress@latest/dist/progress.min.js"></script>
   <!-- 美化提示氣泡框 (Alerts) -->
   <script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
+
   <!-- 控制背景顏色切換的 JS -->
   <script>
-    const checkbox = document.querySelector('#checkbox');
-    const themeStylesheet = document.querySelector('#theme-stylesheet');
-    const currentTheme = localStorage.getItem('theme') || 'light';
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const checkbox = document.querySelector('#checkbox');
+      const currentTheme = localStorage.getItem('theme') || 'light';
 
-    // 初始化 checkbox 狀態
-    if (currentTheme === 'dark') {
-      checkbox.checked = true;
-    }
+      if (checkbox) {
+        if (currentTheme === 'dark') {
+          checkbox.checked = true;
+        }
 
-    checkbox.addEventListener('change', function(e) {
-      if (e.target.checked) {
-        themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css');
-        localStorage.setItem('theme', 'dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css');
-        localStorage.setItem('theme', 'light');
-        document.documentElement.setAttribute('data-theme', 'light');
+        checkbox.addEventListener('change', function(e) {
+          const themeStylesheet = document.getElementById('theme-stylesheet');
+          if (e.target.checked) {
+            if (themeStylesheet) {
+              themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css');
+            }
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            if (themeStylesheet) {
+              themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css');
+            }
+            localStorage.setItem('theme', 'light');
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        });
       }
     });
   </script>
