@@ -13,7 +13,17 @@
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
 
   <!-- Docsify Themeable 主題樣式 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <link id="theme-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <script>
+    // 預先檢查 localStorage，避免載入時閃爍白光
+    (function() {
+      var currentTheme = localStorage.getItem('theme') || 'light';
+      if (currentTheme === 'dark') {
+        document.getElementById('theme-stylesheet').setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 
   <!-- 側邊欄摺疊樣式 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
@@ -37,10 +47,80 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* 切換按鈕容器 - 避開右上角的 Github Corner */
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+      position: fixed;
+      right: 90px;
+      top: 25px;
+      z-index: 10000;
+    }
+    .theme-switch {
+      display: inline-block;
+      height: 28px;
+      position: relative;
+      width: 50px;
+    }
+    .theme-switch input {
+      display: none;
+    }
+    .slider {
+      background-color: #e2e8f0;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: .4s;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .slider:before {
+      background-color: white;
+      bottom: 3px;
+      content: "";
+      height: 22px;
+      left: 3px;
+      position: absolute;
+      transition: .4s;
+      width: 22px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+    input:checked + .slider {
+      background-color: #312e81; /* 深色背景 */
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    .slider .icon {
+      font-size: 12px;
+      user-select: none;
+      z-index: 1;
+    }
   </style>
 </head>
 
 <body>
+  <!-- 背景切換滑塊 -->
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      <div class="slider">
+        <span class="icon">☀️</span>
+        <span class="icon">🌙</span>
+      </div>
+    </label>
+  </div>
+
   <div id="app">載入中...</div>
   <script>
     window.$docsify = {
@@ -93,6 +173,29 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify-progress@latest/dist/progress.min.js"></script>
   <!-- 美化提示氣泡框 (Alerts) -->
   <script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
+  <!-- 控制背景顏色切換的 JS -->
+  <script>
+    const checkbox = document.querySelector('#checkbox');
+    const themeStylesheet = document.querySelector('#theme-stylesheet');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    // 初始化 checkbox 狀態
+    if (currentTheme === 'dark') {
+      checkbox.checked = true;
+    }
+
+    checkbox.addEventListener('change', function(e) {
+      if (e.target.checked) {
+        themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css');
+        localStorage.setItem('theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        themeStylesheet.setAttribute('href', 'https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css');
+        localStorage.setItem('theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    });
+  </script>
 </body>
 
 </html>
